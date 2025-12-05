@@ -5,5 +5,6 @@ public class Driver {
 		// TODO Auto-generated method stub
 		ArrayList<Card> card = new ArrayList<>();
 		System.out.println(card.size());
+		System.out.println("hello");
 	}
 }
