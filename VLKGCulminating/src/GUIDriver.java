@@ -15,12 +15,12 @@ public class GUIDriver extends Application {
 		Scene scene = new Scene(root, 600, 600);
 		stage.setScene(scene);
 		stage.show();
-
+		
+		
 	}
 
 	public static void main(String[] args) {
 		launch(args);
-
 	}
 
 }
