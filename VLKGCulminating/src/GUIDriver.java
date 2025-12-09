@@ -9,7 +9,9 @@ public class GUIDriver extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		VBox root = new VBox(10); // 10 is distance between each node
-		Label text = new Label("HELLO");
+		Label text = new Label("HELLO HIHI");
+		Label text2 = new Label("hiii");
+		root.getChildren().add(text2);
 		root.getChildren().add(text);
 		
 		Scene scene = new Scene(root, 600, 600);
