@@ -19,11 +19,11 @@ public class GUIDriver extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		StackPane root = new StackPane();
-        root.setAlignment(Pos.CENTER);
+//        root.setAlignment(Pos.CENTER);
 
-        Circle disc = new Circle(20, 100, 100);
-        disc.setFill(Color.YELLOW);
-        root.getChildren().add(disc);
+//        Circle disc = new Circle(20, 100, 100);
+//        disc.setFill(Color.YELLOW);
+//        root.getChildren().add(disc);
 
         GridPane grid = new GridPane();
         grid.setStyle("-fx-background-color: transparent;"); // makes background transparent so can see shapes behind 
@@ -31,10 +31,13 @@ public class GUIDriver extends Application {
         grid.setPrefSize(600, 700); // does nothing?
         grid.setMaxSize(600, 700);
         
-        Circle circ = new Circle(50);
-        circ.setFill(Color.RED);
-        circ.setCenterX(50);
-        circ.setCenterY(250);        
+        Circle token = new Circle(30);
+        token.setFill(Color.RED);
+        token.setCenterX(0);
+        token.setCenterY(100);
+        token.relocate(0, 0);
+//        token.setCenterX(50);
+//        token.setCenterY(250);        
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
@@ -59,11 +62,13 @@ public class GUIDriver extends Application {
             }
         }
 
-        Rectangle rectangle = new Rectangle(100, 100, 100, 100);
-        rectangle.setFill(Color.BLACK);
+//        Rectangle rectangle = new Rectangle(100, 100, 100, 100);
+//        rectangle.setFill(Color.BLACK);
 
-        root.getChildren().addAll(rectangle, grid); // adds rectangle behind grid
-        root.setAlignment(grid, Pos.CENTER);
+        root.getChildren().addAll(grid); // adds rectangle behind grid
+//        StackPane.setAlignment(grid, Pos.CENTER);
+        
+        root.getChildren().add(token);
         
         Scene scene = new Scene(root, 700, 700);
         stage.setScene(scene);
