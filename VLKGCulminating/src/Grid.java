@@ -51,29 +51,31 @@ public class Grid {
 		return -1;
 	}
 	
-	public int getRowNum(double currentY) {
-		if (currentY == 151) {
-			return 0;
+	public int getRowVal(int rowNum) {
+		if (rowNum == 0) {
+			return 151;
 		}
-		else if (currentY == 231) {
-			return 1;
+		else if (rowNum == 1) {
+			return 231;
 		}
-		else if (currentY == 311) {
-			return 2;
+		else if (rowNum == 2) {
+			return 311;
 		}
-		else if (currentY == 391) {
-			return 3;
+		else if (rowNum == 3) {
+			return 391;
 		}
-		else if (currentY == 417) {
-			return 4;
+		else if (rowNum == 4) {
+			return 471;
 		}
-		else if (currentY == 551) {
-			return 5;
+		else if (rowNum == 5) {
+			return 551;
 		}
 		return -1;
 	}
 	
-	public void addToken(int row, int column) {
+//	public void addToken(int row, int column) {
+	public double addToken(int column) {
+		int row = 5;
 		boolean taken = isFilled(row, column);
 		while (taken) {
 			row--;
@@ -81,7 +83,21 @@ public class Grid {
 				taken = isFilled(row, column);
 			}
 		}
-			grid[row][column] = getTurn();
+		grid[row][column] = getTurn();
+		double rowNum = getRowVal(row);
+		return rowNum;
+	}
+	
+	public int getRowNum(int column) {
+		int row = 5;
+		boolean taken = isFilled(row, column);
+		while (taken) {
+			row--;
+			if (column >= 0) {
+				taken = isFilled(row, column);
+			}
+		}
+		return row;
 	}
 	
 	// Prints entire grid
