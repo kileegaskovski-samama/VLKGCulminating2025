@@ -1,23 +1,41 @@
+import javafx.animation.PathTransition;
 import javafx.application.Application;
-import javafx.scene.layout.*;
-import javafx.scene.control.*;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.text.*;
-import javafx.geometry.Pos;
-import javafx.scene.shape.*;
-import javafx.scene.paint.*;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 
-import javafx.animation.*;
-import javafx.animation.Timeline;
+//import javafx.geometry.Pos;
+
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+
+//import javafx.scene.Scene;
+
+import javafx.scene.paint.Color;
+
+//import javafx.scene.text.*;
+
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.Scanner;
+//import java.util.Scanner;
 
 public class GUIDriver extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		Pane root = new Pane();
+		Scene scene = new Scene(root, 700, 700);
+		
+		
+		
+		
 		Grid playingGrid = new Grid();
 		playingGrid.print();
 		playingGrid.addToken(0, 0);
@@ -29,7 +47,7 @@ public class GUIDriver extends Application {
 		playingGrid.addToken(5, 6);
 		playingGrid.print();
 		
-		Pane root = new Pane();
+		
 //        root.setAlignment(Pos.CENTER);
 
 //        Circle disc = new Circle(20, 100, 100);
@@ -42,16 +60,6 @@ public class GUIDriver extends Application {
         grid.relocate(30, 70);
         grid.setPrefSize(600, 700); // does nothing?
         grid.setMaxSize(600, 700);
-        
-        Circle token = new Circle(30);
-        token.setFill(Color.RED);
-//        token.setCenterX(0);
-//        token.setCenterY(0);
-//        token.relocate(0, 0);
-//        token.setCenterX(351);
-        token.setCenterX(591);
-        token.setCenterY(0);
-        
         
         
         Shape[][] arrShapes = new Shape[6][7];
@@ -79,8 +87,67 @@ public class GUIDriver extends Application {
             }
         }
         
+        Circle token = new Circle(30);
+        token.setFill(Color.RED);
+//        token.setCenterX(0);
+//        token.setCenterY(0);
+//        token.relocate(0, 0);
+//        token.setCenterX(351);
+        token.setCenterX(591);
+        token.setCenterY(0);
+        System.out.println(token.getCenterX());
+        
+        
         Button confirm = new Button("1 ");
         confirm.relocate(35, 235);
+        
+        scene.setOnKeyPressed(e-> {
+        	double move = 80.0;
+        	
+        	if (e.getCode() == KeyCode.A) {
+        		System.out.println(token.getCenterX());
+        		token.setCenterX(token.getCenterX() - move);
+        		System.out.println(token.getCenterX());
+        	}
+        	if (e.getCode() == KeyCode.D) {
+        		System.out.println(token.getCenterX());
+        		token.setCenterX(token.getCenterX() + move);
+        		System.out.println(token.getCenterX());
+        	}
+        });
+        
+        Rectangle plat = new Rectangle(275, 525, 80, 15); 
+        root.getChildren().add(plat);
+//        Scene scene = new Scene(root, 600, 600);
+        
+
+//        scene.setOnKeyPressed(e-> {
+//            double move = 30.0;
+//            
+//            System.out.println("Key pressed: " + e.getCode());
+//
+//            if (e.getCode() == KeyCode.A) {
+//                plat.setX(plat.getX() - move);
+////            	Path path = new Path();
+////            	double x1 = token.getCenterX();
+////            	double y1 = token.getCenterY();
+////            	path.getElements().add(new MoveTo(x1, y1));
+////            	path.getElements().add(new LineTo(x1, 151));
+////            	
+////            	PathTransition transition = new PathTransition();
+////            	transition.setNode(token);
+////            	transition.setDuration(Duration.seconds(2));
+////            	transition.setPath(path);
+////            	transition.setCycleCount(1);
+////            	transition.play();
+//            }
+//
+//            if (e.getCode() == KeyCode.D) {
+//                plat.setX(plat.getX() + move);
+//            }
+//
+//
+//        });
         
         confirm.setOnAction(e-> {
 //        	System.out.println(token.getCenterX());
@@ -88,6 +155,7 @@ public class GUIDriver extends Application {
 //        	System.out.println(x1);
 //        	int y1 = playingGrid.getRowNum(token.getCenterY());
 //        	playingGrid.addToken();
+//        	System.out.println("Button thing is working.");
         	
         	Path path = new Path();
         	double x1 = token.getCenterX();
@@ -112,10 +180,9 @@ public class GUIDriver extends Application {
         root.getChildren().add(token);
         root.getChildren().add(confirm);
         
-        Scene scene = new Scene(root, 700, 700);
+        
         stage.setScene(scene);
         stage.show();
-		
 		
 	}
 

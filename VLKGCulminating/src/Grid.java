@@ -75,27 +75,16 @@ public class Grid {
 	
 	public void addToken(int row, int column) {
 		boolean taken = isFilled(row, column);
-//		if (column == -1) {
-//			System.out.println("INVALID!");
-//		}
-//		while (taken && column < 7) {
 		while (taken) {
-//			column++;
 			row--;
-//			if (column < 7) {
 			if (column >= 0) {
 				taken = isFilled(row, column);
-//				System.out.println(taken);
 			}
 		}
-//		if (taken && column == 7) {
-//			System.out.println("Row is filled!");
-//		}
-//		else {
 			grid[row][column] = getTurn();
-//		}
 	}
 	
+	// Prints entire grid
 	public void print() {
 		for (int r = 0; r < grid.length; r++) {
 			for (int c = 0; c < grid[r].length; c++) {
