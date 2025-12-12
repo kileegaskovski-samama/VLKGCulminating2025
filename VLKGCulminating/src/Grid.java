@@ -149,4 +149,28 @@ public class Grid {
 		}
 		System.out.println();
 	}
+	
+	public boolean check() {
+		int inARow = 0;
+		int player = getTurnsNoModify();
+		
+		// checks rows
+		for (int r = 0; r < 6; r++) {
+			for (int c = 0; c < 7; c++) {
+				if (grid[r][c] == player) {
+					inARow++;
+					
+					if (inARow == 4) {
+						System.out.println("Player " + player + " won!");
+						return true;
+					}
+				} else {
+					inARow = 0;
+				}
+			}
+			
+		}
+		System.out.println("No wins");
+		return false;
+	}
 }
