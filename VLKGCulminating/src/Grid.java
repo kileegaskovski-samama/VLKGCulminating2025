@@ -8,10 +8,13 @@ public class Grid {
 	}
 	
 	public boolean isFilled(int row, int column) {
+//		if (row != -1 && column != -1) {
 		if (grid[row][column] == 0) {
 			return false;
 		}
 		return true;
+//		}
+//		return true;
 	}
 
 	public int getTurn() {
@@ -20,9 +23,19 @@ public class Grid {
 		}
 		else if (turns % 2 == 0) {
 			turns++;
+//			System.out.println("Turns AFTER: " + turns);
 			return 1;
 		}
+//		System.out.println("Turns: " + turns);
 		turns++;
+//		System.out.println("Turns after: " + turns);
+		return 2;
+	}
+	
+	public int getTurnsNoModify() {
+		if (turns % 2 == 0) {
+			return 1;
+		}
 		return 2;
 	}
 	
@@ -51,7 +64,32 @@ public class Grid {
 		return -1;
 	}
 	
-	public int getRowVal(int rowNum) {
+	public double getColumnVal(int colNum) {
+		if (colNum == 0) {
+			return 111;
+		}
+		else if (colNum == 1) {
+			return 191.0;
+		}
+		else if (colNum == 2) {
+			return 271.0;
+		}
+		else if (colNum == 3) {
+			return 351.0;
+		}
+		else if (colNum == 4) {
+			return 431.0;
+		}
+		else if (colNum == 5) {
+			return 511.0;
+		}
+		else if (colNum == 6) {
+			return 591.0;
+		}
+		return -1;
+	}
+	
+	public double getRowVal(int rowNum) {
 		if (rowNum == 0) {
 			return 151;
 		}
@@ -73,14 +111,15 @@ public class Grid {
 		return -1;
 	}
 	
-//	public void addToken(int row, int column) {
 	public double addToken(int column) {
 		int row = 5;
 		boolean taken = isFilled(row, column);
 		while (taken) {
+			System.out.println("Row: " + row);
 			row--;
 			if (column >= 0) {
 				taken = isFilled(row, column);
+				System.out.println("Filled? " + taken);
 			}
 		}
 		grid[row][column] = getTurn();
