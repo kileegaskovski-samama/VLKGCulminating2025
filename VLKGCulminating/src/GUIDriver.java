@@ -188,7 +188,11 @@ public class GUIDriver extends Application {
         	if (turnOver) {
 	        	int column = playingGrid.getColumnNum(token.getCenterX());
 	        	double rowVal = playingGrid.addToken(column);
-	        	int row = playingGrid.getRowNum(column);
+//	        	int row = playingGrid.getRowNum(column);
+	        	System.out.println("Check 1");
+	        	int row = playingGrid.getCurrentRow();
+	        	System.out.println("Check 2");
+	        	System.out.println("Number you get: " + row);
 	        	int playerColor = playingGrid.getTurnsNoModify();
 	        	
 	        	Path path = new Path();
@@ -205,8 +209,8 @@ public class GUIDriver extends Application {
 	        	
 	        	transition.setOnFinished(g-> {
 	        		if (playerColor == 1) {
-	        			arrCircles[row + 1][column].setFill(Color.RED);
-	        			arrCircles[row + 1][column].setStroke(Color.BLACK);
+	        			arrCircles[row][column].setFill(Color.RED);
+	        			arrCircles[row][column].setStroke(Color.BLACK);
 	//        			token.setFill(Color.RED);
 	//        			
 	//        			token.relocate(0, 0);
@@ -216,8 +220,8 @@ public class GUIDriver extends Application {
 	        		}
 	        		if (playerColor == 2) {
 	//        			System.out.println("PLAYER: " + playerColor);
-	        			arrCircles[row + 1][column].setFill(Color.YELLOW);
-	        			arrCircles[row + 1][column].setStroke(Color.BLACK);
+	        			arrCircles[row][column].setFill(Color.YELLOW);
+	        			arrCircles[row][column].setStroke(Color.BLACK);
 	//        			token.setFill(Color.YELLOW);
 	        		}
 	        	});

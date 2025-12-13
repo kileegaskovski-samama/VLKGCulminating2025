@@ -2,13 +2,16 @@
 public class Grid {
 	int[][] grid = new int[6][7];
 	int turns;
+	int currentRow;
 	
 	public Grid() {
 		turns = 0;
+		currentRow = 0;
 	}
 	
 	public boolean isFilled(int row, int column) {
 //		if (row != -1 && column != -1) {
+		System.out.println("GETS HERE. " + row);
 		if (grid[row][column] == 0) {
 			return false;
 		}
@@ -122,9 +125,17 @@ public class Grid {
 				System.out.println("Filled? " + taken);
 			}
 		}
+		System.out.println("Old row = " + currentRow);
+		currentRow = row;
+		System.out.println("Updated row = " + currentRow);
 		grid[row][column] = getTurn();
 		double rowNum = getRowVal(row);
 		return rowNum;
+	}
+	
+	public int getCurrentRow() {
+		System.out.println("FINAL row = " + currentRow);
+		return currentRow;
 	}
 	
 	public int getRowNum(int column) {
