@@ -229,7 +229,8 @@ public class GUIDriver extends Application {
 	        	transition.play();
 	        	
 	        	playingGrid.print();
-	        
+	        	playingGrid.checkForWin();
+	        	
         	}
         	
         	turnOver = false;
@@ -264,7 +265,7 @@ public class GUIDriver extends Application {
     		}
         	
         	turnOver = true;
-        	playingGrid.check();
+        	
 //        	});
         });
         

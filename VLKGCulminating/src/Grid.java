@@ -161,27 +161,160 @@ public class Grid {
 		System.out.println();
 	}
 	
-	public boolean check() {
-		int inARow = 0;
+	public boolean checkForWin() {
 		int player = getTurnsNoModify();
+		int rows = 6;
+		int cols = 7;
+		
+		if (player == 1) {
+			player = 2;
+		}
+		
+		else if (player == 2) {
+			player = 1;
+		}
+		
+		System.out.println("Player " + player);
 		
 		// checks rows
-		for (int r = 0; r < 6; r++) {
-			for (int c = 0; c < 7; c++) {
+		int hInARow = 0;
+		
+		for (int r = 0; r < rows; r++) {
+			
+			for (int c = 0; c < cols; c++) {
 				if (grid[r][c] == player) {
-					inARow++;
+					hInARow++;
 					
-					if (inARow == 4) {
-						System.out.println("Player " + player + " won!");
+					if (hInARow >= 4) {
+						System.out.println("Player " + player + " won! (row)");
 						return true;
 					}
 				} else {
-					inARow = 0;
+					hInARow = 0;
 				}
 			}
 			
 		}
-		System.out.println("No wins");
-		return false;
+		
+		// checks columns
+		int cInARow = 0;
+		
+		for (int c = 0; c < cols; c++) {
+			
+			for (int r = 0; r < rows; r++) {
+				if (grid[r][c] == player) {
+					cInARow++;
+					
+					if (cInARow >= 4) {
+						System.out.println("Player " + player + " won! (column)");
+						return true;
+					}
+				} else {
+					cInARow = 0;
+				}
+			}
+		}
+		
+		// checks diagonals left to right
+		// https://www.geeksforgeeks.org/dsa/zigzag-or-diagonal-traversal-of-matrix/  
+		int dInARow = 0;
+
+		for (int r = 0; r < rows; r++) { // top half (diagonals starting from top row)
+			int i = r;
+			int j = 0;
+			
+			while (i >= 0 && j < cols) {
+				// System.out.println(i + "," + j);
+				
+				if (grid[i][j] == player) {
+					dInARow++;
+					
+					if (dInARow >= 4) {
+						System.out.println("Player " + player + " won! (diagonal, L -> R, top half)");
+						return true;
+					}
+				} else {
+					dInARow = 0;
+				}
+				
+				i--;
+				j++;
+			}
+		}
+		
+		for (int c = 1; c < cols; c++) { // bottom half (diagonals starting from remaining rows)
+			int i = rows - 1;
+			int j = c;
+			
+			while (i >= 0 && j < cols) {
+				// System.out.println(i + "," + j);
+				if (grid[i][j] == player) {
+					dInARow++;
+					
+					if (dInARow >= 4) {
+						System.out.println("Player " + player + " won! (diagonal, L -> R, bottom half)");
+						return true;
+					}
+				} else {
+					dInARow = 0;
+				}
+				
+				i--;
+				j++;
+			}
+		}
+		
+		// checks diagonals right to left
+		
+		for (int r = 0; r < rows; r++) { // top half
+			int i = r;
+			int j = 6;
+			
+			while (i >= 0 && j >= 0) {
+				// System.out.println(i + "," + j);
+				if (grid[i][j] == player) {
+					dInARow++;
+					
+					if (dInARow >= 4) {
+						System.out.println("Player " + player + " won! (diagonal, R -> L, top half)");
+						return true;
+					}
+				} else {
+					dInARow = 0;
+				}
+				
+				i--;
+				j--;
+			}
+		}
+		
+		for (int c = 1; c < cols; c++) { // bottom half
+			int i = rows - 1;
+			int j = rows - c;
+			
+			while (i >= 0 && j >= 0) {
+				// System.out.println(i + "," + j);
+				
+				if (grid[i][j] == player) {
+					dInARow++;
+					
+					if (dInARow >= 4) {
+						System.out.println("Player " + player + " won! (diagonal, R -> L, bottom half)");
+						return true;
+					}
+				} else {
+					dInARow = 0;
+				}
+				
+				i--;
+				j--;
+			}
+		}
+			
+			System.out.println("No wins");
+			return false;
 	}
+		
+		
+		
 }
