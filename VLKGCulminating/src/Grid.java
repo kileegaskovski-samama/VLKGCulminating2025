@@ -4,6 +4,9 @@ public class Grid {
 	int turns;
 	int currentRow;
 	
+	String p1Color = "yellow";
+	String p2Color = "red";
+	
 	public Grid() {
 		turns = 0;
 		currentRow = 0;
@@ -11,6 +14,7 @@ public class Grid {
 	
 	public boolean isFilled(int row, int column) {
 //		if (row != -1 && column != -1) {
+		
 		System.out.println("GETS HERE. " + row);
 		if (grid[row][column] == 0) {
 			return false;
@@ -33,6 +37,10 @@ public class Grid {
 		turns++;
 //		System.out.println("Turns after: " + turns);
 		return 2;
+	}
+	
+	public void subtractTurn() {
+		turns--;
 	}
 	
 	public int getTurnsNoModify() {
@@ -159,6 +167,16 @@ public class Grid {
 			System.out.println();
 		}
 		System.out.println();
+	}
+	
+	public String tokenColorPOne(String color) {
+		p1Color = color;
+		return p1Color;
+	}
+	
+	public String tokenColorPTwo(String color) {
+		p2Color = color;
+		return p2Color;
 	}
 	
 	public boolean checkForWin() {
