@@ -37,7 +37,7 @@ public class Grid {
 		turns++;
 //		System.out.println("Turns after: " + turns);
 		return 2;
-	}
+	} 
 	
 	public void subtractTurn() {
 		turns--;
