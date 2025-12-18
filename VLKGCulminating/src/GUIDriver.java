@@ -43,6 +43,34 @@ public class GUIDriver extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		
+		// start screen
+				Pane startRoot = new Pane();
+				
+				Label title = new Label("Welcome to Connect 4!");
+				title.setFont(Font.font(30));
+				title.setStyle("-fx-font-weight: bold;");
+				title.layoutXProperty().bind(startRoot.widthProperty().subtract(title.widthProperty()).divide(2));
+				title.setLayoutY(50);
+				title.setVisible(true);
+				// startRoot.getChildren().add(title);
+			
+				Button tutorial = new Button("Tutorial");
+				tutorial.layoutXProperty().bind(startRoot.widthProperty().subtract(tutorial.widthProperty()).divide(2));
+		       tutorial.setLayoutY(300);
+			    Button start = new Button("Start New Game");
+			    start.layoutXProperty().bind(startRoot.widthProperty().subtract(start.widthProperty()).divide(2));
+			    start.layoutYProperty().bind(startRoot.heightProperty().subtract(start.heightProperty()).divide(2));
+			    // start.setDisable(false);
+			   
+			   
+			    startRoot.getChildren().addAll(title, start, tutorial);
+			    // startRoot.setCenter(startGame);
+			    Scene startScene = new Scene(startRoot, 700, 700);
+			    stage.setScene(startScene); 
+			    stage.show();
+			  
+		
 		// Pane for the instructions screen
 		Pane instructionsScreen = new Pane();
 		Scene instructions = new Scene(instructionsScreen, 700, 700);
@@ -58,6 +86,11 @@ public class GUIDriver extends Application {
 		// Pane for the main playing screen
 		Pane root = new Pane();
 		Scene scene = new Scene(root, 700, 700);
+		
+		start.setOnAction(e-> { // goes to game
+	       	stage.setScene(scene);
+	       	stage.show();
+	       });
 		
 		Label label1 = new Label("To start, Player 1 chooses their token color.");
 		label1.relocate(100, 100);
