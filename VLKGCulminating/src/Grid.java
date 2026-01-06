@@ -1,4 +1,3 @@
-
 public class Grid {
 	int[][] grid = new int[6][7];
 	int turns;

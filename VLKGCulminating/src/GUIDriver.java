@@ -1,8 +1,11 @@
+import javafx.animation.KeyFrame;
 import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
 //import javafx.geometry.Pos;
@@ -29,11 +32,14 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+
 //import java.util.Scanner;
 
 public class GUIDriver extends Application {
 	
 	boolean turnOver = true;
+//	boolean turnNextPlayer = false;
 	Color tokenOneColor = Color.TRANSPARENT;
 	Color tokenTwoColor = Color.TRANSPARENT;
 	int chooseColorCount = 0;
@@ -75,13 +81,25 @@ public class GUIDriver extends Application {
 		Pane instructionsScreen = new Pane();
 		Scene instructions = new Scene(instructionsScreen, 700, 700);
 		
-		// Pane for choosing token colors
-		Pane customizeScreen = new Pane();
-		Scene customize = new Scene(customizeScreen, 700, 700);
+//		// Pane for choosing token colors
+//		Pane customizeScreen = new Pane();
+//		Scene customize = new Scene(customizeScreen, 700, 700);
 		
 		// Pane for feedback
 		Pane feedbackScreen = new Pane();
-		Scene feedbackScene = new Scene(feedbackScreen, 700, 700); 
+		Scene feedbackScene = new Scene(feedbackScreen, 700, 700);
+		
+		// Pane for feedback
+		Pane viewRRScreen = new Pane();
+		Scene viewRRScene = new Scene(viewRRScreen, 700, 700);
+		
+		Font font2 = Font.font("Regular", FontWeight.BOLD, 36);
+		
+		Button addReview = new Button("Add a review!");
+		addReview.setFont(font2);
+		addReview.setTextFill(Color.DARKBLUE);
+		addReview.relocate(230, 300);
+		addReview.setVisible(false);
 		
 		// Pane for the main playing screen
 		Pane root = new Pane();
@@ -210,6 +228,8 @@ public class GUIDriver extends Application {
 		
 		instructionsScreen.getChildren().add(introToken);
 		
+//		instructionsScreen.getChildren().add(addReview);
+		
 		
 		stage.setScene(instructions);
 		
@@ -316,7 +336,8 @@ public class GUIDriver extends Application {
 		// Makes the main screen appear
 		play.setOnAction(e-> {
 //			stage.setScene(customize);
-			stage.setScene(scene);
+//			stage.setScene(scene);
+			stage.setScene(feedbackScene);
 		});
 		
 //		Label customLabel = new Label("Player 1 choose a token color:");
@@ -494,50 +515,55 @@ public class GUIDriver extends Application {
 		        	playerWin = playingGrid.checkForWin();
 		        	if (playerWin) {
 		        		winningLabel.setVisible(true);
+		        		addReview.setVisible(true);
 		        	}
 		        	 
 	        	}
-	        	
+//	        	confirm.setDisable(false);
 	        	turnOver = false;
+//	        	turnNextPlayer = true;
         	}
         	
         });
         
         nextPlayer.setOnAction(e-> {
         	if (canStart) {
-	        	pressEndTurn.setVisible(false);
-	        	confirm.setDisable(true);
-	        	int playerColor = playingGrid.getTurnsNoModify();
-	        	
-	        	Path path = new Path();
-	        	double x1 = token.getCenterX();
-	        	double y1 = token.getCenterY();
-	        	path.getElements().add(new MoveTo(x1, y1));
-	        	path.getElements().add(new LineTo(x1, y1 + 10));
-	        	
-	        	PathTransition transition = new PathTransition();
-	        	transition.setNode(token);
-	        	transition.setDuration(Duration.millis(1));
-	        	transition.setCycleCount(1);
-	        	transition.setPath(path);
-	        	transition.play();
-	        	
-	        	
-	        	if (playerColor == 1) {
-	//    			token.setFill(tokenOneColor);
-	        		token.setFill(tokenTwoColor);
-	    		}
-	    		else {
-	//    			token.setFill(tokenTwoColor);
-	    			token.setFill(tokenOneColor);
-	    		}
-	        	
-	        	transition.setOnFinished(g-> {
-	        		confirm.setDisable(false);
-	        	});
-	        	
-	        	turnOver = true;
-        	}
+//        		if (turnNextPlayer) {
+		        	pressEndTurn.setVisible(false);
+		        	confirm.setDisable(true);
+		        	int playerColor = playingGrid.getTurnsNoModify();
+		        	
+		        	Path path = new Path();
+		        	double x1 = token.getCenterX();
+		        	double y1 = token.getCenterY();
+		        	path.getElements().add(new MoveTo(x1, y1));
+		        	path.getElements().add(new LineTo(x1, y1 + 10));
+		        	
+		        	PathTransition transition = new PathTransition();
+		        	transition.setNode(token);
+		        	transition.setDuration(Duration.millis(1));
+		        	transition.setCycleCount(1);
+		        	transition.setPath(path);
+		        	transition.play();
+		        	
+		        	
+		        	if (playerColor == 1) {
+		//    			token.setFill(tokenOneColor);
+		        		token.setFill(tokenTwoColor);
+		    		}
+		    		else {
+		//    			token.setFill(tokenTwoColor);
+		    			token.setFill(tokenOneColor);
+		    		}
+		        	
+		        	transition.setOnFinished(g-> {
+		        		confirm.setDisable(false);
+		        	});
+		        	
+        		}
+        	turnOver = true;
+//        		turnNextPlayer = false;
+//        	}
         });
         
         
@@ -757,32 +783,205 @@ public class GUIDriver extends Application {
         	}
         });
         
+        // If the game is over, the player can add a review/rating
+        addReview.setOnAction(e-> {
+        	stage.setScene(feedbackScene);
+        });
+        
+//        File ratingFile = new File("Ratings.txt");
+        
+        
+        RatingCollection rc = new RatingCollection();
+        
+        Text addReviewMessage = new Text("Add a review (1-45 characters, inclusive):");
+        addReviewMessage.relocate(280, 280);
+        TextField review = new TextField();
+        review.relocate(280, 300);
+        Button addRev = new Button("ADD");
+        addRev.relocate(450, 300);
+        
+        Text notValidReview = new Text("Review must be between\n1-45 characters (inclusive)");
+        notValidReview.setVisible(false);
+        notValidReview.relocate(500, 300);
+        notValidReview.setFill(Color.RED);
+        
+        Text addRatingMessage = new Text("Add a rating (1 - 5, inclusive):");
+        addRatingMessage.relocate(280, 340);
+        TextField rating = new TextField();
+        rating.relocate(280, 360);
+        Button addRating = new Button("ADD");
+        addRating.relocate(450, 360);
+        
+        Text notValidRating = new Text("Rating must be between\n1-5 (inclusive)");
+        notValidRating.setVisible(false);
+        notValidRating.relocate(500, 360);
+        notValidRating.setFill(Color.RED);
+        
+        
+//        Text ratingAverage = new Text("No ratings yet");
+//        ratingAverage.relocate(325, 500);
+//        ratingAverage.setVisible(false);
+        
+//        Label correctInteger = new Label("Please enter an integer between 1 and 5, inclusive");
+        
+        Button viewRatings = new Button("VIEW RATINGS");
+        viewRatings.relocate(313, 430);
+        
+        feedbackScreen.getChildren().add(review);
+        feedbackScreen.getChildren().add(rating);
+        
+        feedbackScreen.getChildren().add(addReviewMessage);
+        feedbackScreen.getChildren().add(addRatingMessage);
+        
+        feedbackScreen.getChildren().add(addRev);
+        feedbackScreen.getChildren().add(addRating);
+        feedbackScreen.getChildren().add(viewRatings);
+        feedbackScreen.getChildren().addAll(notValidRating, notValidReview);
+        
+//        feedbackScreen.getChildren().add(ratingAverage);
+        
+//        rc.addReviews("test test test!");
+        
+        addRev.setOnAction(e-> {
+        	String tempReview = review.getText();
+        	System.out.println("THE STRING IS CURRENTLY: " + tempReview);
+        	
+//        	notValidReview.setVisible(false);
+        	
+        	try {
+        		if (tempReview.length() > 0 && tempReview.length() <= 45) {
+        			rc.addReviews(tempReview);
+        		}
+        		else {
+        			System.out.println("REVIEW MUST HAVE TEXT");
+        			notValidReview.setVisible(true);
+        			Timeline hideMessage = new Timeline(new KeyFrame(Duration.seconds(4), g-> {
+        				notValidReview.setVisible(false);
+        			}));
+        			hideMessage.play();
+        		}
+        	}
+        	catch (Exception exception) {
+        		System.out.println(exception.getMessage());
+        	}
+        	
+        	review.setText("");
+        });
+        
+        addRating.setOnAction(e-> {
+        	int tempRating = Integer.parseInt(rating.getText());
+        	try {
+        		if (tempRating <= 5 && tempRating >= 1) {
+        			rc.addRatings(tempRating);
+        		}
+        		else {
+        			System.out.println("NUMBER NOT IN RANGE.");
+        			notValidRating.setVisible(true);
+        			Timeline hideMessage = new Timeline(new KeyFrame(Duration.seconds(4), g-> {
+        				notValidRating.setVisible(false);
+        			}));
+        			hideMessage.play();
+        		}
+        	}
+        	catch (Exception exception) {
+        		System.out.println(exception.getMessage());
+        	}
+        	
+        	rating.setText("");
+        });
+        
+        Font rrPageFont = Font.font("Regular", FontWeight.BOLD, 30);
+        Font rrPageFontOne = Font.font("Regular", FontWeight.BOLD, 25);
+        Font rrPageFontTwo = Font.font("Regular", 20);
+        
+        Text gameRatings = new Text("Game ratings");
+        gameRatings.relocate(270, 50);
+        gameRatings.setFont(rrPageFont);
+        gameRatings.setFill(Color.DARKOLIVEGREEN);
+        
+        Text ratings = new Text("Average Rating:");
+        ratings.relocate(100, 150);
+        ratings.setFont(rrPageFontOne);
+        ratings.setFill(Color.DARKGREEN);
+        Text reviews = new Text("Reviews:");
+        reviews.relocate(100, 280);
+        reviews.setFont(rrPageFontOne);
+        reviews.setFill(Color.DARKGREEN);
+        Text latestRatings = new Text("No ratings yet"); // visible in viewRRScreen Pane
+        latestRatings.setVisible(false);
+        latestRatings.relocate(100, 180);
+        latestRatings.setFont(rrPageFontTwo);
+        Text latestReviews = new Text("No reviews yet"); // visible in viewRRScreen Pane
+        latestReviews.setVisible(false);
+        latestReviews.relocate(100, 310);
+        latestReviews.setFont(rrPageFontTwo);
+        
+        Line line1 = new Line(5, 100, 695, 100);
+        Line line2 = new Line(5, 230, 695, 230);
+        Line line3 = new Line(5, 440, 695, 440);
+        
+        Button addReviewAgain = new Button("Add another rating");
+        addReviewAgain.setFont(rrPageFontTwo);
+        addReviewAgain.relocate(100, 490);
+        
+        Button done = new Button("Done?");
+        done.setFont(rrPageFontTwo);
+        done.relocate(100, 570);
+        
+        addReviewAgain.setOnAction(e-> {
+        	stage.setScene(feedbackScene);
+        });
+        
+        // In the feedbackScreen Pane
+        viewRatings.setOnAction(e-> {
+        	String labelMessage = rc.getRatings() + " / 5";
+        	System.out.println("*********" + labelMessage + "********");
+        	latestRatings.setText(labelMessage);
+        	latestRatings.setVisible(true);
+        	
+        	labelMessage = "" + rc.getLatestReviews();
+        	latestReviews.setText(labelMessage);
+        	latestReviews.setVisible(true);
+        	
+        	System.out.println("*********" + labelMessage + "********");
+        	
+        	stage.setScene(viewRRScene);
+        });
+        
+        // In the viewRRScreen
+        ///
+        ///
+        ///
+        ///
+        ///
+        //
+        
+        viewRRScreen.getChildren().addAll(latestRatings, latestReviews, gameRatings);
+        viewRRScreen.getChildren().addAll(ratings, reviews);
+        viewRRScreen.getChildren().add(addReviewAgain);
+        viewRRScreen.getChildren().add(done);
+        viewRRScreen.getChildren().addAll(line1, line2, line3);
+        
 
 
-        root.getChildren().addAll(grid); // adds rectangle behind grid
+        root.getChildren().add(grid); // adds rectangle behind grid
+        
+//        root.getChildren().add(ratingAverage);
         
         root.getChildren().add(token);
         root.getChildren().add(confirm);
         root.getChildren().add(nextPlayer);
         root.getChildren().add(pressEndTurn);
         
-        root.getChildren().add(grey);
-        root.getChildren().add(green);
-        root.getChildren().add(blue);
-        root.getChildren().add(purple);
-        root.getChildren().add(orange);
-        root.getChildren().add(pink);
+        root.getChildren().addAll(grey, green, blue, purple, orange, pink);
         
-        root.getChildren().add(tokenRed);
-        root.getChildren().add(tokenYellow);
-        root.getChildren().add(tokenOrange);
-        root.getChildren().add(tokenSalmon);
-        root.getChildren().add(tokenPink);
-        root.getChildren().add(tokenCyan);
+        root.getChildren().addAll(tokenRed, tokenYellow, tokenOrange, tokenSalmon, tokenPink, tokenCyan);
         
         root.getChildren().add(startGame);
         
         root.getChildren().add(winningLabel);
+        
+        root.getChildren().add(addReview);
         
         
 //        stage.setScene(scene);
