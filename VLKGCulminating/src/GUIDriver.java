@@ -1,3 +1,4 @@
+import javafx.animation.FillTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
@@ -7,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.application.Platform;
 
 //import javafx.geometry.Pos;
 
@@ -47,34 +49,116 @@ public class GUIDriver extends Application {
 	boolean canStart = false; // players must have chosen their token colors before the game can begin
 //	boolean canPress = false; // for the instruction screen, players can't use arrow keys until they reach that point in the instructions
 	
+	String username1 = "";
+	String username2 = "";
+	
 	@Override
 	public void start(Stage stage) throws Exception {
 		
 		// start screen
-				Pane startRoot = new Pane();
-				
-				Label title = new Label("Welcome to Connect 4!");
-				title.setFont(Font.font(30));
-				title.setStyle("-fx-font-weight: bold;");
-				title.layoutXProperty().bind(startRoot.widthProperty().subtract(title.widthProperty()).divide(2));
-				title.setLayoutY(50);
-				title.setVisible(true);
-				// startRoot.getChildren().add(title);
-			
-				Button tutorial = new Button("Tutorial");
-				tutorial.layoutXProperty().bind(startRoot.widthProperty().subtract(tutorial.widthProperty()).divide(2));
-		       tutorial.setLayoutY(300);
-			    Button start = new Button("Start New Game");
-			    start.layoutXProperty().bind(startRoot.widthProperty().subtract(start.widthProperty()).divide(2));
-			    start.layoutYProperty().bind(startRoot.heightProperty().subtract(start.heightProperty()).divide(2));
-			    // start.setDisable(false);
-			   
-			   
-			    startRoot.getChildren().addAll(title, start, tutorial);
-			    // startRoot.setCenter(startGame);
-			    Scene startScene = new Scene(startRoot, 700, 700);
-			    stage.setScene(startScene); 
-			    stage.show();
+		Pane startRoot = new Pane();
+		Label title = new Label("Welcome to Connect 4!");
+		title.setFont(Font.font(40));
+		title.setStyle("-fx-font-weight: bold;");
+		title.layoutXProperty().bind(startRoot.widthProperty().subtract(title.widthProperty()).divide(2));
+		title.setLayoutY(40);
+		title.setVisible(true);
+		
+		Font btnFont = Font.font("Tahoma", FontWeight.BOLD, 20);
+		
+		Button tutorial = new Button("Tutorial");
+		tutorial.setFont(btnFont);
+		tutorial.layoutXProperty().bind(startRoot.widthProperty().subtract(tutorial.widthProperty()).divide(2));
+		tutorial.setLayoutY(300);
+		tutorial.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+		
+		Button start = new Button("Start New Game");
+		start.setFont(btnFont);
+		start.layoutXProperty().bind(startRoot.widthProperty().subtract(start.widthProperty()).divide(2));
+		start.setLayoutY(350);
+		start.setStyle("-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+		
+		// create background grid image
+		GridPane startGrid = new GridPane();
+		startGrid.setStyle("-fx-background-color: transparent;"); // makes background transparent so can see shapes behind
+		startGrid.relocate(30, 70);
+		startGrid.setPrefSize(600, 700); // does nothing?
+		startGrid.setMaxSize(600, 700);
+	    
+		Grid startPlayingGrid = new Grid();
+		Shape[][] arrStartShapes = new Shape[6][7];
+		Circle[][] arrStartCircles = new Circle[6][7];
+		
+		for (int r = 0; r < 6; r++) {
+           for (int c = 0; c < 7; c++) {
+               Rectangle sq = new Rectangle(31, 31, 100, 100);
+               Circle circ = new Circle(30);
+               // align circle to middle of square
+               circ.setCenterX(sq.getX() + sq.getWidth() / 2);
+               circ.setCenterY(sq.getY() + sq.getWidth() / 2);
+              
+               // takes area of circle away from middle of square
+               Shape shape = Shape.subtract(sq, circ);
+               shape.setFill(Color.CORNFLOWERBLUE);
+               arrStartShapes[r][c] = shape;
+               Pane cell = new Pane(shape);
+              
+               // limits size of cell
+               cell.setPrefSize(80, 80);
+               cell.setMaxSize(80, 80);
+             
+               startGrid.add(cell, c, r); // adds cell to grid
+              
+              
+               Circle circle = new Circle(30);
+               double rowLocation = startPlayingGrid.getRowVal(r);
+               circle.setCenterY(rowLocation);
+               double columnLocation = startPlayingGrid.getColumnVal(c);
+               circle.setCenterX(columnLocation);
+               circle.setFill(Color.TRANSPARENT);
+               arrStartCircles[r][c] = circle;
+               startRoot.getChildren().add(circle);
+           }
+       }
+		
+		// fill background grid with tokens
+		
+		// row 5 tokens
+		arrStartCircles[5][1].setFill(Color.RED);
+		arrStartCircles[5][2].setFill(Color.YELLOW);
+		arrStartCircles[5][3].setFill(Color.RED);
+		arrStartCircles[5][4].setFill(Color.RED);
+		arrStartCircles[5][5].setFill(Color.YELLOW);
+		arrStartCircles[5][6].setFill(Color.RED);
+		
+		// row 4 tokens
+		arrStartCircles[4][1].setFill(Color.YELLOW);
+		arrStartCircles[4][2].setFill(Color.RED);
+		arrStartCircles[4][3].setFill(Color.RED);
+		arrStartCircles[4][4].setFill(Color.YELLOW);
+		arrStartCircles[4][5].setFill(Color.RED);
+		
+		// row 3 tokens
+		arrStartCircles[3][2].setFill(Color.RED);
+		arrStartCircles[3][3].setFill(Color.YELLOW);
+		arrStartCircles[3][4].setFill(Color.YELLOW);
+		
+		// row 2 tokens
+		arrStartCircles[2][2].setFill(Color.YELLOW);
+		arrStartCircles[2][3].setFill(Color.YELLOW);
+		arrStartCircles[2][4].setFill(Color.YELLOW);
+		
+		// row 1 token
+		arrStartCircles[1][4].setFill(Color.YELLOW);
+		// Rectangle layer = new Rectangle(80, 80, 560, 480);
+		Rectangle layer = new Rectangle(0, 0, 700, 700);
+		layer.setFill(Color.WHITE);
+		layer.setOpacity(0.6);
+		
+		startRoot.getChildren().addAll(startGrid, layer, title, start, tutorial);
+		Scene startScene = new Scene(startRoot, 700, 700);
+		stage.setScene(startScene);
+		stage.show();
 			  
 		
 		// Pane for the instructions screen
@@ -96,9 +180,9 @@ public class GUIDriver extends Application {
 		Font font2 = Font.font("Regular", FontWeight.BOLD, 36);
 		
 		Button addReview = new Button("Add a review!");
-		addReview.setFont(font2);
+//		addReview.setFont(font2);
 		addReview.setTextFill(Color.DARKBLUE);
-		addReview.relocate(230, 300);
+		addReview.relocate(230, 50);
 		addReview.setVisible(false);
 		
 		// Pane for the main playing screen
@@ -228,10 +312,13 @@ public class GUIDriver extends Application {
 		
 		instructionsScreen.getChildren().add(introToken);
 		
-//		instructionsScreen.getChildren().add(addReview);
+		tutorial.setOnAction(e-> { // goes to tutorial when pressed
+			stage.setScene(instructions);
+       		stage.show();
+       	});
 		
 		
-		stage.setScene(instructions);
+//		stage.setScene(instructions);
 		
 		
         introRed.setOnAction(e-> {
@@ -332,12 +419,174 @@ public class GUIDriver extends Application {
         });
 		
 		
+     // screen in between instructions/start game and start new game/start game
+        
+        Pane settingsRoot = new Pane();
+      
+        // enter usernames
+        Label usernamesTitle = new Label("Enter your names: ");
+        usernamesTitle.setFont(Font.font(40));
+ 		usernamesTitle.setStyle("-fx-font-weight: bold;");
+ 		usernamesTitle.setLayoutX(20);
+ 		usernamesTitle.setLayoutY(20);
+       
+        Label p1 = new Label("Player 1: ");
+        Label p2 = new Label("Player 2: ");
+       
+        p1.setTextFill(Color.DARKBLUE);
+        p1.setLayoutX(30);
+        p1.setLayoutY(100);
+        p1.setFont(Font.font(25));
+       
+        p2.setTextFill(Color.DARKBLUE);
+        p2.setLayoutX(30);
+        p2.setLayoutY(200);
+        p2.setFont(Font.font(25));
+       
+        TextField p1Name = new TextField();
+        p1Name.setPrefWidth(100);
+        p1Name.setPrefHeight(30);
+        p1Name.setLayoutX(150);
+        p1Name.setLayoutY(100);
+       
+        TextField p2Name = new TextField();
+        p2Name.setPrefWidth(100);
+        p2Name.setPrefHeight(30);
+        p2Name.setLayoutX(150);
+        p2Name.setLayoutY(200);
+       
+        Button next = new Button("Next");
+       
+        Label nameErr = new Label("");
+        nameErr.setFont(Font.font(15));
+        nameErr.setTextFill(Color.RED);
+        nameErr.setLayoutY(250);
+   
+       
+        next.setLayoutY(300);
+        next.layoutXProperty().bind(settingsRoot.widthProperty().subtract(next.widthProperty()).divide(2));
+        next.setFont(btnFont);
+       
+        settingsRoot.getChildren().addAll(usernamesTitle, p1, p2, next, p1Name, p2Name, nameErr);
+       
+        // choose token colours
+  
+        // creates colour options buttons
+        Button tokenRed = new Button("Red"); // Color.RED
+        tokenRed.relocate(70, 500);
+        Button tokenYellow = new Button("Yellow"); // Color.YELLOW
+        tokenYellow.relocate(160, 500);
+        Button tokenOrange = new Button("Orange"); // Color.ORANGE
+        tokenOrange.relocate(260, 500);
+        Button tokenSalmon = new Button("Coral"); // Color.DARKSALMON
+        tokenSalmon.relocate(365, 500);
+        Button tokenPink = new Button("Light pink"); // Color.HOTPINK
+        tokenPink.relocate(464, 500);
+        Button tokenCyan = new Button("Turquoise"); // Color.MEDIUMSPRINGGREEN
+        tokenCyan.relocate(560, 500);
+       
+        // invisible until next is pressed
+        tokenRed.setVisible(false);
+        tokenYellow.setVisible(false);
+        tokenOrange.setVisible(false);
+        tokenSalmon.setVisible(false);
+        tokenPink.setVisible(false);
+        tokenCyan.setVisible(false);
+       
+        Label chooseColour = new Label();
+        chooseColour.setFont(Font.font(30));
+ 		chooseColour.setStyle("-fx-font-weight: bold;");
+        chooseColour.setLayoutX(20);
+        chooseColour.setLayoutY(350);
+       
+        settingsRoot.getChildren().add(chooseColour);
+       
+        next.setOnAction(e-> { // goes to choosing token colours
+        	nameErr.setText("");
+        	
+        	username1 = p1Name.getText().trim();
+ 	       	username2 = p2Name.getText().trim();
+ 	       	
+ 	       	// checks if name is valid (between 1 and 10 characters)
+ 	       	if (username1.length() < 1 || username2.length() < 1 || username1.length() > 15 || username1.length() > 15) {
+ 	       		nameErr.setText("Username must be between 1 and 15 characters");
+ 	       		nameErr.layoutXProperty().bind(settingsRoot.widthProperty().subtract(nameErr.widthProperty()).divide(2));
+ 	       		
+ 	       		
+ 	       	} else {
+ 	       		next.setVisible(false);
+ 	       		
+ 	       		// choose colours
+ 	       		chooseColour.setText(username1 + ", please choose your token colour:");
+ 	  
+ 	       		
+ 	            // example tokens
+ 	            Circle red = new Circle(90, 450, 31, Color.RED);
+ 	            red.setStroke(Color.BLACK);
+ 	            Circle yellow = new Circle(191, 450, 31, Color.YELLOW);
+ 	            yellow.setStroke(Color.BLACK);
+ 	            Circle orange = new Circle(292, 450, 31, Color.ORANGE);
+ 	            orange.setStroke(Color.BLACK);
+ 	            Circle salmon = new Circle(393, 450, 31, Color.DARKSALMON);
+ 	            salmon.setStroke(Color.BLACK);
+ 	            Circle pink = new Circle(494, 450, 31, Color.HOTPINK);
+ 	            pink.setStroke(Color.BLACK);
+ 	            Circle cyan = new Circle(595, 450, 31, Color.MEDIUMSPRINGGREEN);
+ 	            cyan.setStroke(Color.BLACK);
+ 	           
+ 	            // set buttons to visible
+ 	            tokenRed.setVisible(true);
+ 	            tokenYellow.setVisible(true);
+ 	            tokenOrange.setVisible(true);
+ 	            tokenSalmon.setVisible(true);
+ 	            tokenPink.setVisible(true);
+ 	            tokenCyan.setVisible(true);
+ 	           
+ 	            // center buttons to circles
+ 	            tokenRed.layoutXProperty().bind(red.centerXProperty());
+ 	            tokenRed.translateXProperty().bind(tokenRed.widthProperty().divide(-2));
+ 	            tokenRed.setLayoutY(500);
+ 	           
+ 	            tokenYellow.layoutXProperty().bind(yellow.centerXProperty());
+ 	            tokenYellow.translateXProperty().bind(tokenYellow.widthProperty().divide(-2));
+ 	            tokenYellow.setLayoutY(500);
+ 	          
+ 	            tokenOrange.layoutXProperty().bind(orange.centerXProperty());
+ 	            tokenOrange.translateXProperty().bind(tokenOrange.widthProperty().divide(-2));
+ 	            tokenOrange.setLayoutY(500);
+ 	           
+ 	            tokenSalmon.layoutXProperty().bind(salmon.centerXProperty());
+ 	            tokenSalmon.translateXProperty().bind(tokenSalmon.widthProperty().divide(-2));
+ 	            tokenSalmon.setLayoutY(500);
+ 	           
+ 	            tokenPink.layoutXProperty().bind(pink.centerXProperty());
+ 	            tokenPink.translateXProperty().bind(tokenPink.widthProperty().divide(-2));
+ 	            tokenPink.setLayoutY(500);
+ 	           
+ 	            tokenCyan.layoutXProperty().bind(cyan.centerXProperty());
+ 	            tokenCyan.translateXProperty().bind(tokenCyan.widthProperty().divide(-2));
+ 	            tokenCyan.setLayoutY(500);
+ 	            settingsRoot.getChildren().addAll(red, yellow, orange, salmon, pink, cyan);
+ 	       	}
+ 	      
+ 	       });
+       
+        Scene settingsScene = new Scene(settingsRoot, 700, 700);
+    
+        		
+        start.setOnAction(e-> { // goes to settings from start screen
+ 	       	stage.setScene(settingsScene);
+ 	       	stage.show();
+ 	       });
+        
+        
 		////////////////////////////////////////
 		// Makes the main screen appear
 		play.setOnAction(e-> {
 //			stage.setScene(customize);
 //			stage.setScene(scene);
-			stage.setScene(feedbackScene);
+//			stage.setScene(feedbackScene);
+			stage.setScene(settingsScene);
 		});
 		
 //		Label customLabel = new Label("Player 1 choose a token color:");
@@ -368,8 +617,8 @@ public class GUIDriver extends Application {
         ////////////////
         ////////////////
         ////////////////
-        Button startGame = new Button("START GAME");
-        startGame.setDisable(false);
+//        Button startGame = new Button("START GAME");
+//        startGame.setDisable(false);
         
         Shape[][] arrShapes = new Shape[6][7];
         Circle[][] arrCircles = new Circle[6][7];
@@ -413,10 +662,13 @@ public class GUIDriver extends Application {
         
         
         Button confirm = new Button("CONFIRM");
-        confirm.relocate(271, 630);
+//      confirm.relocate(271, 630);
+        confirm.layoutXProperty().bind(scene.widthProperty().subtract(confirm.widthProperty()).divide(2));
+        confirm.setLayoutY(630);
         
         Button nextPlayer = new Button("END TURN");
         nextPlayer.relocate(351, 630);
+        nextPlayer.setVisible(false);
         
         
         
@@ -450,19 +702,24 @@ public class GUIDriver extends Application {
         pressEndTurn.setTextFill(Color.RED);
         pressEndTurn.setVisible(false);
         
+        // Creates winner message
         Font winningFont = new Font("Times New Roman", 60.0);
         
-        Text winningLabel = new Text("PLAYER " + playingGrid.getTurnsNoModify() + " WON!");
+        Text winningLabel = new Text("");
         System.out.println("Winner");
-        winningLabel.relocate(125, 350);
+        winningLabel.setLayoutY(84);
+//        winningLabel.relocate(125, 350);
         winningLabel.setFont(winningFont);
-        winningLabel.setFill(Color.GOLD);
+//        winningLabel.setFill(Color.GOLD);
         winningLabel.setStroke(Color.BLACK);
         winningLabel.setVisible(false);
         
+        
+        
         confirm.setOnAction(e-> {
         	if (canStart) {
-	        	nextPlayer.setDisable(true);
+        		confirm.setDisable(true);
+//	        	nextPlayer.setDisable(true);
 	        	if (turnOver) { // prevents user from pressing button twice in a row
 		        	int column = playingGrid.getColumnNum(token.getCenterX());
 		        	if (column != -1) {
@@ -499,6 +756,70 @@ public class GUIDriver extends Application {
 	//		        			arrCircles[row][column].setFill(tokenOneColor);
 			        			arrCircles[row][column].setStroke(Color.BLACK);
 			        		}
+			        		
+
+
+			        		playerWin = playingGrid.checkForWin();
+			        		
+				        	if (playerWin) {
+				        		String winnerName = "";
+				        		int winner = 0;
+				        		
+				        		token.setVisible(false);
+				        		
+				        		// sets winner message to winning player's user name and token colour
+				        		if (playingGrid.getTurnsNoModify() == 2) {
+				        			winnerName = username1;
+				        			winningLabel.setFill(tokenTwoColor);
+				        			winner = 1;
+				        			
+				        		} else {
+				        			winnerName = username2;
+				        			winningLabel.setFill(tokenOneColor);
+				        			winner = 2;
+				        			
+				        		}
+				        		
+				        		winningLabel.setText(winnerName + " won!");
+				        		winningLabel.translateXProperty().bind(root.widthProperty().subtract(winningLabel.getBoundsInLocal().getWidth()).divide(2));
+				        		winningLabel.setVisible(true);
+				        		
+				        		// highlights winning tokens
+				        		for (int i = 0; i < playingGrid.rowValues.size(); i++) {
+				        			System.out.println(playingGrid.rowValues.get(i) + ", " + playingGrid.colValues.get(i)); // prints winning token indexes
+				        		}
+				        		
+				        		for (int i = 0; i < playingGrid.rowValues.size(); i++) {
+				        			int rIndex = playingGrid.rowValues.get(i);
+				        			int cIndex = playingGrid.colValues.get(i);
+				        			
+				        			if (winner == 1) {
+				        				FillTransition changeColour = new FillTransition(Duration.millis(2000), arrCircles[rIndex][cIndex], tokenTwoColor, Color.WHITE);
+					        			changeColour.setCycleCount(50);
+					        			changeColour.setAutoReverse(true);
+					        			
+					        			changeColour.play();
+				        			
+				        			} else {
+				        				FillTransition changeColour = new FillTransition(Duration.millis(2000), arrCircles[rIndex][cIndex], tokenOneColor, Color.WHITE);
+				        				changeColour.setCycleCount(50);
+					        			changeColour.setAutoReverse(true);
+					        			
+					        			changeColour.play();
+				        			}
+				        			
+				        			
+				        		
+				        		}				        		
+				        		addReview.setVisible(true);
+				        	}
+			        		
+				        	// automatically presses end turn button
+				        	Platform.runLater(() -> { // stops token from flickering
+				        	    nextPlayer.fire();
+				        	});
+
+			        		
 			        		nextPlayer.setDisable(false);
 			        	});
 			        	
@@ -512,12 +833,12 @@ public class GUIDriver extends Application {
 		        		pressEndTurn.setVisible(true);
 		        	}
 		        	
-		        	playerWin = playingGrid.checkForWin();
-		        	if (playerWin) {
-		        		winningLabel.setVisible(true);
-		        		addReview.setVisible(true);
-		        	}
-		        	 
+//		        	playerWin = playingGrid.checkForWin();
+//		        	if (playerWin) {
+//		        		winningLabel.setVisible(true);
+//		        		addReview.setVisible(true);
+//		        	}
+//		        	 
 	        	}
 //	        	confirm.setDisable(false);
 	        	turnOver = false;
@@ -567,18 +888,18 @@ public class GUIDriver extends Application {
         });
         
         
-        Button tokenRed = new Button("Red"); // Color.RED
-        tokenRed.relocate(100, 50);
-        Button tokenYellow = new Button("Yellow"); // Color.YELLOW
-        tokenYellow.relocate(170, 50);
-        Button tokenOrange = new Button("Orange"); // Color.ORANGE
-        tokenOrange.relocate(260, 50);
-        Button tokenSalmon = new Button("Coral"); // Color.DARKSALMON
-        tokenSalmon.relocate(350, 50);
-        Button tokenPink = new Button("Light pink"); // Color.HOTPINK
-        tokenPink.relocate(430, 50);
-        Button tokenCyan = new Button("Turquoise"); // Color.MEDIUMSPRINGGREEN
-        tokenCyan.relocate(530, 50);
+//        Button tokenRed = new Button("Red"); // Color.RED
+//        tokenRed.relocate(100, 50);
+//        Button tokenYellow = new Button("Yellow"); // Color.YELLOW
+//        tokenYellow.relocate(170, 50);
+//        Button tokenOrange = new Button("Orange"); // Color.ORANGE
+//        tokenOrange.relocate(260, 50);
+//        Button tokenSalmon = new Button("Coral"); // Color.DARKSALMON
+//        tokenSalmon.relocate(350, 50);
+//        Button tokenPink = new Button("Light pink"); // Color.HOTPINK
+//        tokenPink.relocate(430, 50);
+//        Button tokenCyan = new Button("Turquoise"); // Color.MEDIUMSPRINGGREEN
+//        tokenCyan.relocate(530, 50);
         
         tokenRed.setOnAction(e-> {
         	chooseColorCount++;
@@ -591,6 +912,11 @@ public class GUIDriver extends Application {
 				tokenOneColor = Color.RED;
 			}
 			tokenRed.setDisable(true);
+			
+			if (chooseColorCount == 1) {
+				chooseColour.setText(username2 + ", please choose your token colour");
+			}
+			
 			if (chooseColorCount == 2) {
 				tokenYellow.setDisable(true);
 				tokenOrange.setDisable(true);
@@ -600,6 +926,9 @@ public class GUIDriver extends Application {
 				playingGrid.subtractTurn();
 				playingGrid.subtractTurn();
 				canStart = true;
+				
+				stage.setScene(scene);
+				stage.show();
 			}
         });
         
@@ -614,6 +943,11 @@ public class GUIDriver extends Application {
 				tokenOneColor = Color.YELLOW;
 			}
 			tokenYellow.setDisable(true);
+			
+			if (chooseColorCount == 1) {
+				chooseColour.setText(username2 + ", please choose your token colour:");
+			}
+			
 			if (chooseColorCount == 2) {
 				tokenRed.setDisable(true);
 				tokenOrange.setDisable(true);
@@ -623,6 +957,8 @@ public class GUIDriver extends Application {
 				playingGrid.subtractTurn();
 				playingGrid.subtractTurn();
 				canStart = true;
+				stage.setScene(scene);
+				stage.show();
 			}
         });
         
@@ -637,6 +973,10 @@ public class GUIDriver extends Application {
 				tokenOneColor = Color.ORANGE;
 			}
 			tokenOrange.setDisable(true);
+			
+			if (chooseColorCount == 1) {
+				chooseColour.setText(username2 + ", please choose your token colour:");
+			}
 			if (chooseColorCount == 2) {
 				tokenYellow.setDisable(true);
 				tokenRed.setDisable(true);
@@ -646,6 +986,8 @@ public class GUIDriver extends Application {
 				playingGrid.subtractTurn();
 				playingGrid.subtractTurn();
 				canStart = true;
+				stage.setScene(scene);
+				stage.show();
 			}
         });
         
@@ -660,6 +1002,10 @@ public class GUIDriver extends Application {
 				tokenOneColor = Color.DARKSALMON;
 			}
 			tokenSalmon.setDisable(true);
+			
+			if (chooseColorCount == 1) {
+				chooseColour.setText(username2 + ", please choose your token colour:");
+			}
 			if (chooseColorCount == 2) {
 				tokenYellow.setDisable(true);
 				tokenOrange.setDisable(true);
@@ -669,6 +1015,8 @@ public class GUIDriver extends Application {
 				playingGrid.subtractTurn();
 				playingGrid.subtractTurn();
 				canStart = true;
+				stage.setScene(scene);
+				stage.show();
 			}
         });
         
@@ -683,6 +1031,10 @@ public class GUIDriver extends Application {
 				tokenOneColor = Color.HOTPINK;
 			}
 			tokenPink.setDisable(true);
+			
+			if (chooseColorCount == 1) {
+				chooseColour.setText(username2 + ", please choose your token colour:");
+			}
 			if (chooseColorCount == 2) {
 				tokenYellow.setDisable(true);
 				tokenOrange.setDisable(true);
@@ -692,6 +1044,8 @@ public class GUIDriver extends Application {
 				playingGrid.subtractTurn();
 				playingGrid.subtractTurn();
 				canStart = true;
+				stage.setScene(scene);
+				stage.show();
 			}
         });
         
@@ -706,6 +1060,10 @@ public class GUIDriver extends Application {
 				tokenOneColor = Color.MEDIUMSPRINGGREEN;
 			}
 			tokenCyan.setDisable(true);
+			
+			if (chooseColorCount == 1) {
+				chooseColour.setText(username2 + ", please choose your token colour:");
+			}
 			if (chooseColorCount == 2) {
 				tokenYellow.setDisable(true);
 				tokenOrange.setDisable(true);
@@ -715,6 +1073,8 @@ public class GUIDriver extends Application {
 				playingGrid.subtractTurn();
 				playingGrid.subtractTurn();
 				canStart = true;
+				stage.setScene(scene);
+				stage.show();
 			}
         });
         
@@ -975,9 +1335,9 @@ public class GUIDriver extends Application {
         
         root.getChildren().addAll(grey, green, blue, purple, orange, pink);
         
-        root.getChildren().addAll(tokenRed, tokenYellow, tokenOrange, tokenSalmon, tokenPink, tokenCyan);
+        settingsRoot.getChildren().addAll(tokenRed, tokenYellow, tokenOrange, tokenSalmon, tokenPink, tokenCyan);
         
-        root.getChildren().add(startGame);
+//        root.getChildren().add(startGame);
         
         root.getChildren().add(winningLabel);
         

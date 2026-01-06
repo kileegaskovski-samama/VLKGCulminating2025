@@ -1,7 +1,11 @@
+import java.util.ArrayList;
 public class Grid {
 	int[][] grid = new int[6][7];
 	int turns;
 	int currentRow;
+	
+	ArrayList<Integer> rowValues = new ArrayList<>();
+	ArrayList<Integer> colValues = new ArrayList<>();
 	
 	String p1Color = "yellow";
 	String p2Color = "red";
@@ -22,7 +26,6 @@ public class Grid {
 //		}
 //		return true;
 	}
-
 	public int getTurn() {
 		if (turns > 42) {
 			return -1;
@@ -36,7 +39,7 @@ public class Grid {
 		turns++;
 //		System.out.println("Turns after: " + turns);
 		return 2;
-	} 
+	}
 	
 	public void subtractTurn() {
 		turns--;
@@ -197,10 +200,13 @@ public class Grid {
 		int hInARow = 0;
 		
 		for (int r = 0; r < rows; r++) {
+			hInARow = 0;
+			
 			
 			for (int c = 0; c < cols; c++) {
 				if (grid[r][c] == player) {
 					hInARow++;
+					addIndex(r, c);
 					
 					if (hInARow >= 4) {
 						System.out.println("Player " + player + " won! (row)");
@@ -208,6 +214,9 @@ public class Grid {
 					}
 				} else {
 					hInARow = 0;
+					rowValues.clear();
+					colValues.clear();
+					
 				}
 			}
 			
@@ -217,10 +226,14 @@ public class Grid {
 		int cInARow = 0;
 		
 		for (int c = 0; c < cols; c++) {
+			cInARow = 0;
+			rowValues.clear();
+			colValues.clear();
 			
 			for (int r = 0; r < rows; r++) {
 				if (grid[r][c] == player) {
 					cInARow++;
+					addIndex(r, c);
 					
 					if (cInARow >= 4) {
 						System.out.println("Player " + player + " won! (column)");
@@ -228,23 +241,29 @@ public class Grid {
 					}
 				} else {
 					cInARow = 0;
+					rowValues.clear();
+					colValues.clear();
+					
 				}
 			}
 		}
 		
 		// checks diagonals left to right
-		// https://www.geeksforgeeks.org/dsa/zigzag-or-diagonal-traversal-of-matrix/  
+		// https://www.geeksforgeeks.org/dsa/zigzag-or-diagonal-traversal-of-matrix/ 
 		int dInARow = 0;
-
-		for (int r = 0; r < rows; r++) { // top half (diagonals starting from top row)
+		
+		// top half (diagonals starting from top row)
+		for (int r = 0; r < rows; r++) { // determines index of token where diagonal starts
 			int i = r;
 			int j = 0;
+			dInARow = 0;
 			
-			while (i >= 0 && j < cols) {
+			while (i >= 0 && j < cols) { // goes through diagonal while i and j values are valid in grid
 				// System.out.println(i + "," + j);
 				
 				if (grid[i][j] == player) {
 					dInARow++;
+					addIndex(i, j);
 					
 					if (dInARow >= 4) {
 						System.out.println("Player " + player + " won! (diagonal, L -> R, top half)");
@@ -252,6 +271,9 @@ public class Grid {
 					}
 				} else {
 					dInARow = 0;
+					rowValues.clear();
+					colValues.clear();
+					
 				}
 				
 				i--;
@@ -259,14 +281,18 @@ public class Grid {
 			}
 		}
 		
-		for (int c = 1; c < cols; c++) { // bottom half (diagonals starting from remaining rows)
+		// bottom half (diagonals starting from remaining rows)
+		for (int c = 1; c < cols; c++) {
 			int i = rows - 1;
 			int j = c;
+			dInARow = 0;
 			
 			while (i >= 0 && j < cols) {
 				// System.out.println(i + "," + j);
 				if (grid[i][j] == player) {
 					dInARow++;
+					addIndex(i, j);
+					
 					
 					if (dInARow >= 4) {
 						System.out.println("Player " + player + " won! (diagonal, L -> R, bottom half)");
@@ -274,6 +300,9 @@ public class Grid {
 					}
 				} else {
 					dInARow = 0;
+					rowValues.clear();
+					colValues.clear();
+					
 				}
 				
 				i--;
@@ -283,14 +312,17 @@ public class Grid {
 		
 		// checks diagonals right to left
 		
-		for (int r = 0; r < rows; r++) { // top half
+		// top half
+		for (int r = 0; r < rows; r++) {
 			int i = r;
 			int j = 6;
+			dInARow = 0;
 			
 			while (i >= 0 && j >= 0) {
 				// System.out.println(i + "," + j);
 				if (grid[i][j] == player) {
 					dInARow++;
+					addIndex(i, j);
 					
 					if (dInARow >= 4) {
 						System.out.println("Player " + player + " won! (diagonal, R -> L, top half)");
@@ -298,6 +330,9 @@ public class Grid {
 					}
 				} else {
 					dInARow = 0;
+					rowValues.clear();
+					colValues.clear();
+					
 				}
 				
 				i--;
@@ -305,15 +340,19 @@ public class Grid {
 			}
 		}
 		
-		for (int c = 1; c < cols; c++) { // bottom half
+		// bottom half
+		for (int c = 1; c < cols; c++) {
 			int i = rows - 1;
 			int j = rows - c;
+			dInARow = 0;
+			
 			
 			while (i >= 0 && j >= 0) {
 				// System.out.println(i + "," + j);
 				
 				if (grid[i][j] == player) {
 					dInARow++;
+					addIndex(i, j);
 					
 					if (dInARow >= 4) {
 						System.out.println("Player " + player + " won! (diagonal, R -> L, bottom half)");
@@ -321,6 +360,10 @@ public class Grid {
 					}
 				} else {
 					dInARow = 0;
+					rowValues.clear();
+					colValues.clear();
+					
+					
 				}
 				
 				i--;
@@ -330,6 +373,12 @@ public class Grid {
 			
 			System.out.println("No wins");
 			return false;
+	}
+	
+	public void addIndex(int r, int c) {
+		rowValues.add(r);
+		colValues.add(c);
+		
 	}
 		
 		
