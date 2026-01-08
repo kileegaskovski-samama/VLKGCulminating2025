@@ -691,6 +691,10 @@ public class GUIDriver extends Application {
 		        		token.setCenterX(token.getCenterX() + move);
 	        		}
 	        	}
+	        	
+	        	if (e.getCode() == KeyCode.S) {
+	        		confirm.fire();
+	        	}
         	}
 //        	else {
 //        		token.setCenterX(0);
@@ -765,6 +769,7 @@ public class GUIDriver extends Application {
 				        		String winnerName = "";
 				        		int winner = 0;
 				        		
+				        		confirm.setDisable(true);
 				        		token.setVisible(false);
 				        		
 				        		// sets winner message to winning player's user name and token colour
@@ -1343,6 +1348,18 @@ public class GUIDriver extends Application {
         
         root.getChildren().add(addReview);
         
+        Label thanks = new Label("Thanks for playing Connect 4!");
+		thanks.setFont(Font.font(40));
+		thanks.setStyle("-fx-font-weight: bold;");
+		thanks.layoutXProperty().bind(root.widthProperty().subtract(thanks.widthProperty()).divide(2));
+		thanks.setLayoutY(300);
+        
+        done.setOnAction(e-> {
+        	root.getChildren().removeAll(confirm, grey, green, blue, purple, orange, pink, addReview, winningLabel);
+        	root.getChildren().addAll(layer, thanks);
+        	stage.setScene(scene);
+        	
+		});
         
 //        stage.setScene(scene);
         stage.show();
