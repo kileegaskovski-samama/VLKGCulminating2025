@@ -666,8 +666,9 @@ public class GUIDriver extends Application {
         confirm.layoutXProperty().bind(scene.widthProperty().subtract(confirm.widthProperty()).divide(2));
         confirm.setLayoutY(630);
         
-        Button nextPlayer = new Button("END TURN");
-        nextPlayer.relocate(351, 630);
+        Button nextPlayer = new Button("CONTINUE");
+        nextPlayer.layoutXProperty().bind(scene.widthProperty().subtract(nextPlayer.widthProperty()).divide(2));
+        nextPlayer.setLayoutY(630);
         nextPlayer.setVisible(false);
         
         
@@ -701,7 +702,7 @@ public class GUIDriver extends Application {
 //        	}
         });
         
-        Label pressEndTurn = new Label("              Outside of grid.\nPress END TURN to continue");
+        Label pressEndTurn = new Label("              Outside of grid.");
         pressEndTurn.relocate(271, 660);
         pressEndTurn.setTextFill(Color.RED);
         pressEndTurn.setVisible(false);
@@ -834,6 +835,8 @@ public class GUIDriver extends Application {
 		        	}
 		        	
 		        	else {
+		        		confirm.setDisable(true);
+		        		nextPlayer.setVisible(true);
 		        		nextPlayer.setDisable(false);
 		        		pressEndTurn.setVisible(true);
 		        	}
@@ -855,8 +858,10 @@ public class GUIDriver extends Application {
         nextPlayer.setOnAction(e-> {
         	if (canStart) {
 //        		if (turnNextPlayer) {
+        			nextPlayer.setVisible(false);
 		        	pressEndTurn.setVisible(false);
 		        	confirm.setDisable(true);
+		        	confirm.setVisible(true);
 		        	int playerColor = playingGrid.getTurnsNoModify();
 		        	
 		        	Path path = new Path();
