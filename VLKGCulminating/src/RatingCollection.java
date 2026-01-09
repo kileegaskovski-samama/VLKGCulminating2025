@@ -1,25 +1,29 @@
-import java.util.ArrayList;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 
+/**
+ * Collection of ratings and reviews for the connect 4 game
+ */
 public class RatingCollection {
-	File ratingFile;
-	File reviewFile;
-	ArrayList<Integer> allRatings;
+	private File ratingFile;
+	private File reviewFile;
 	
+	/**
+	 * Creates a ratingCollection containing written reviews and game ratings
+	 */
 	public RatingCollection() {
-		allRatings = new ArrayList<>();
 		ratingFile = new File("Ratings.txt");
 		reviewFile = new File("Reviews.txt");
 		
-		System.out.println("To...:");
-	 //   System.out.println(ratingFile.getAbsolutePath());
 	}
 	
+	/**
+	 * Adds a review to the file "Reviews.txt"
+	 * @param review - a written review from 1 to 45 characters, inclusive
+	 */
 	public void addReviews(String review) {
 		try {
-	//		Scanner inFile = new Scanner(ratingFile);
 			FileWriter out = new FileWriter(reviewFile, true);
 			out.write(review + "\n");
 			out.flush();
@@ -30,6 +34,11 @@ public class RatingCollection {
 		}
 	}
 	
+	/**
+	 * Adds a rating to the file "Ratings.txt"
+	 * @param rating - a number rating from 1 to 5, inclusive
+	 * Precondition: rating must be an integer
+	 */
 	public void addRatings(int rating) {
 		try {
 			FileWriter out = new FileWriter(ratingFile, true);
@@ -42,6 +51,10 @@ public class RatingCollection {
 		}
 	}
 	
+	/**
+	 * Returns the average rating for Connect 4
+	 * @return average game rating
+	 */
 	public double getRatings() {
 		double average = 0;
 		int num = 0;
@@ -62,17 +75,18 @@ public class RatingCollection {
 		}
 		
 		average = Math.round(average*100.0) / 100.0;
-//		average *= 100;
-//		average /= (int)100;
 		
 		return average;
 	}
 	
+	/**
+	 * Returns the last four reviews for Connect 4
+	 * @return returns the last four game reviews
+	 */
 	public String getLatestReviews() {
 		String latestReviews = "";
 		int count = 0;
 		int secondCount = 0;
-		System.out.println("In get latest reveiw");
 		
 		try {
 			Scanner inFile = new Scanner(reviewFile);

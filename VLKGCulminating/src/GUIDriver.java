@@ -10,16 +10,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.application.Platform;
 
-//import javafx.geometry.Pos;
-
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-//import javafx.scene.Scene;
-
 import javafx.scene.paint.Color;
-
-//import javafx.scene.text.*;
 
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -34,20 +28,19 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
-
-//import java.util.Scanner;
-
+/**
+* Graphical user interface for the connect four
+*/
 public class GUIDriver extends Application {
 	
 	boolean turnOver = true;
-//	boolean turnNextPlayer = false;
 	Color tokenOneColor = Color.TRANSPARENT;
 	Color tokenTwoColor = Color.TRANSPARENT;
 	int chooseColorCount = 0;
 	boolean playerWin = false; // true if a player won
 	boolean canStart = false; // players must have chosen their token colors before the game can begin
-//	boolean canPress = false; // for the instruction screen, players can't use arrow keys until they reach that point in the instructions
+	
+	boolean testtest = false;
 	
 	String username1 = "";
 	String username2 = "";
@@ -150,7 +143,6 @@ public class GUIDriver extends Application {
 		
 		// row 1 token
 		arrStartCircles[1][4].setFill(Color.YELLOW);
-		// Rectangle layer = new Rectangle(80, 80, 560, 480);
 		Rectangle layer = new Rectangle(0, 0, 700, 700);
 		layer.setFill(Color.WHITE);
 		layer.setOpacity(0.6);
@@ -164,11 +156,7 @@ public class GUIDriver extends Application {
 		// Pane for the instructions screen
 		Pane instructionsScreen = new Pane();
 		Scene instructions = new Scene(instructionsScreen, 700, 700);
-		
-//		// Pane for choosing token colors
-//		Pane customizeScreen = new Pane();
-//		Scene customize = new Scene(customizeScreen, 700, 700);
-		
+				
 		// Pane for feedback
 		Pane feedbackScreen = new Pane();
 		Scene feedbackScene = new Scene(feedbackScreen, 700, 700);
@@ -180,7 +168,6 @@ public class GUIDriver extends Application {
 		Font font2 = Font.font("Regular", FontWeight.BOLD, 36);
 		
 		Button addReview = new Button("Add a review!");
-//		addReview.setFont(font2);
 		addReview.setTextFill(Color.DARKBLUE);
 		addReview.relocate(230, 50);
 		addReview.setVisible(false);
@@ -226,16 +213,12 @@ public class GUIDriver extends Application {
 		
 		Button introRed = new Button("Red");
 		introRed.relocate(100, 50);
-//		introRed.setTextFill(Color.RED);
 		Button introYellow = new Button("Yellow");
 		introYellow.relocate(170, 50);
-//		introYellow.setTextFill(Color.YELLOW);
 		Button introOrange = new Button("Orange");
 		introOrange.relocate(260, 50);
-//		introOrange.setTextFill(Color.ORANGE);
 		Button introSalmon = new Button("Coral");
 		introSalmon.relocate(350, 50);
-//		introSalmon.setTextFill(Color.DARKSALMON);
 		
 		Button gotIt = new Button("Got it!");
 		gotIt.relocate(100, 200);
@@ -315,11 +298,7 @@ public class GUIDriver extends Application {
 		tutorial.setOnAction(e-> { // goes to tutorial when pressed
 			stage.setScene(instructions);
        		stage.show();
-       	});
-		
-		
-//		stage.setScene(instructions);
-		
+       	});		
 		
         introRed.setOnAction(e-> {
         	introToken.setFill(Color.RED);
@@ -374,7 +353,6 @@ public class GUIDriver extends Application {
         	gotIt.setDisable(true);
         	testedIt.setVisible(true);
         	label3.setVisible(true);
-//        	canPress = true;
         });
         
         testedIt.setOnAction(e-> {
@@ -397,8 +375,6 @@ public class GUIDriver extends Application {
         });
         
         introNextPlayer.setOnAction(e-> {
-//        	arrowTwo.setStroke(Color.GREY);
-//        	vTwo.setFill(Color.GREY);
         	arrowTwo.setVisible(false);
         	vTwo.setVisible(false);
         	play.setVisible(true);
@@ -583,17 +559,8 @@ public class GUIDriver extends Application {
 		////////////////////////////////////////
 		// Makes the main screen appear
 		play.setOnAction(e-> {
-//			stage.setScene(customize);
-//			stage.setScene(scene);
-//			stage.setScene(feedbackScene);
 			stage.setScene(settingsScene);
-		});
-		
-//		Label customLabel = new Label("Player 1 choose a token color:");
-//		customLabel.relocate(50, 100);
-//		
-//		customizeScreen.getChildren().add(customLabel);
-//		
+		});		
 		
 		////////////////////////////////////////
 		Grid playingGrid = new Grid();
@@ -616,14 +583,10 @@ public class GUIDriver extends Application {
         ////////////////
         ////////////////
         ////////////////
-        ////////////////
-//        Button startGame = new Button("START GAME");
-//        startGame.setDisable(false);
-        
+        ////////////////        
         Shape[][] arrShapes = new Shape[6][7];
         Circle[][] arrCircles = new Circle[6][7];
         
-//        startGame.setOnAction(e-> {
 	        for (int r = 0; r < 6; r++) {
 	            for (int c = 0; c < 7; c++) {
 	                Rectangle sq = new Rectangle(31, 31, 100, 100);
@@ -662,7 +625,6 @@ public class GUIDriver extends Application {
         
         
         Button confirm = new Button("CONFIRM");
-//      confirm.relocate(271, 630);
         confirm.layoutXProperty().bind(scene.widthProperty().subtract(confirm.widthProperty()).divide(2));
         confirm.setLayoutY(630);
         
@@ -697,9 +659,6 @@ public class GUIDriver extends Application {
 	        		confirm.fire();
 	        	}
         	}
-//        	else {
-//        		token.setCenterX(0);
-//        	}
         });
         
         Label pressEndTurn = new Label("              Outside of grid.");
@@ -711,30 +670,25 @@ public class GUIDriver extends Application {
         Font winningFont = new Font("Times New Roman", 60.0);
         
         Text winningLabel = new Text("");
-        System.out.println("Winner");
         winningLabel.setLayoutY(84);
-//        winningLabel.relocate(125, 350);
         winningLabel.setFont(winningFont);
-//        winningLabel.setFill(Color.GOLD);
         winningLabel.setStroke(Color.BLACK);
         winningLabel.setVisible(false);
+        
         
         
         
         confirm.setOnAction(e-> {
         	if (canStart) {
         		confirm.setDisable(true);
-//	        	nextPlayer.setDisable(true);
+        		if (!testtest) {
 	        	if (turnOver) { // prevents user from pressing button twice in a row
 		        	int column = playingGrid.getColumnNum(token.getCenterX());
 		        	if (column != -1) {
-//			        	System.out.println("COLUMN " + column);
 			        	double rowVal = playingGrid.addToken(column);
-//			        	System.out.println("Check 1");
 			        	int row = playingGrid.getCurrentRow();
-//			        	System.out.println("Check 2");
-//			        	System.out.println("Number you get: " + row);
 			        	int playerColor = playingGrid.getTurnsNoModify();
+			        	
 			        	
 			        	Path path = new Path();
 			        	double x1 = token.getCenterX();
@@ -750,15 +704,12 @@ public class GUIDriver extends Application {
 			        	
 			        	transition.setOnFinished(g-> {
 			        		if (playerColor == 1) {
-	//		        			arrCircles[row][column].setFill(Color.RED);
+			        			arrCircles[row][column].setFill(Color.RED);
 			        			arrCircles[row][column].setFill(tokenOneColor);
-	//		        			arrCircles[row][column].setFill(tokenTwoColor);
 			        			arrCircles[row][column].setStroke(Color.BLACK);
 			        		}
 			        		if (playerColor == 2) {
-	//		        			arrCircles[row][column].setFill(Color.YELLOW);
 			        			arrCircles[row][column].setFill(tokenTwoColor);
-	//		        			arrCircles[row][column].setFill(tokenOneColor);
 			        			arrCircles[row][column].setStroke(Color.BLACK);
 			        		}
 			        		
@@ -771,9 +722,11 @@ public class GUIDriver extends Application {
 				        		int winner = 0;
 				        		
 				        		confirm.setDisable(true);
+				        		nextPlayer.setDisable(true);
 				        		token.setVisible(false);
+				        		testtest = true;
 				        		
-				        		// sets winner message to winning player's user name and token colour
+				        		// sets winner message to winning player's user name and token color
 				        		if (playingGrid.getTurnsNoModify() == 2) {
 				        			winnerName = username1;
 				        			winningLabel.setFill(tokenTwoColor);
@@ -789,11 +742,6 @@ public class GUIDriver extends Application {
 				        		winningLabel.setText(winnerName + " won!");
 				        		winningLabel.translateXProperty().bind(root.widthProperty().subtract(winningLabel.getBoundsInLocal().getWidth()).divide(2));
 				        		winningLabel.setVisible(true);
-				        		
-				        		// highlights winning tokens
-				        		for (int i = 0; i < playingGrid.rowValues.size(); i++) {
-				        			System.out.println(playingGrid.rowValues.get(i) + ", " + playingGrid.colValues.get(i)); // prints winning token indexes
-				        		}
 				        		
 				        		for (int i = 0; i < playingGrid.rowValues.size(); i++) {
 				        			int rIndex = playingGrid.rowValues.get(i);
@@ -840,24 +788,19 @@ public class GUIDriver extends Application {
 		        		nextPlayer.setDisable(false);
 		        		pressEndTurn.setVisible(true);
 		        	}
-		        	
-//		        	playerWin = playingGrid.checkForWin();
-//		        	if (playerWin) {
-//		        		winningLabel.setVisible(true);
-//		        		addReview.setVisible(true);
-//		        	}
-//		        	 
+		        			        	 
 	        	}
-//	        	confirm.setDisable(false);
 	        	turnOver = false;
-//	        	turnNextPlayer = true;
+        		}
+        		else {
+        			confirm.setDisable(true);
+        		}
         	}
         	
         });
         
         nextPlayer.setOnAction(e-> {
         	if (canStart) {
-//        		if (turnNextPlayer) {
         			nextPlayer.setVisible(false);
 		        	pressEndTurn.setVisible(false);
 		        	confirm.setDisable(true);
@@ -879,11 +822,9 @@ public class GUIDriver extends Application {
 		        	
 		        	
 		        	if (playerColor == 1) {
-		//    			token.setFill(tokenOneColor);
 		        		token.setFill(tokenTwoColor);
 		    		}
 		    		else {
-		//    			token.setFill(tokenTwoColor);
 		    			token.setFill(tokenOneColor);
 		    		}
 		        	
@@ -893,24 +834,8 @@ public class GUIDriver extends Application {
 		        	
         		}
         	turnOver = true;
-//        		turnNextPlayer = false;
-//        	}
         });
-        
-        
-//        Button tokenRed = new Button("Red"); // Color.RED
-//        tokenRed.relocate(100, 50);
-//        Button tokenYellow = new Button("Yellow"); // Color.YELLOW
-//        tokenYellow.relocate(170, 50);
-//        Button tokenOrange = new Button("Orange"); // Color.ORANGE
-//        tokenOrange.relocate(260, 50);
-//        Button tokenSalmon = new Button("Coral"); // Color.DARKSALMON
-//        tokenSalmon.relocate(350, 50);
-//        Button tokenPink = new Button("Light pink"); // Color.HOTPINK
-//        tokenPink.relocate(430, 50);
-//        Button tokenCyan = new Button("Turquoise"); // Color.MEDIUMSPRINGGREEN
-//        tokenCyan.relocate(530, 50);
-        
+                
         tokenRed.setOnAction(e-> {
         	chooseColorCount++;
 			int turn = playingGrid.getTurn();
@@ -1157,9 +1082,7 @@ public class GUIDriver extends Application {
         addReview.setOnAction(e-> {
         	stage.setScene(feedbackScene);
         });
-        
-//        File ratingFile = new File("Ratings.txt");
-        
+                
         
         RatingCollection rc = new RatingCollection();
         
@@ -1186,14 +1109,7 @@ public class GUIDriver extends Application {
         notValidRating.setVisible(false);
         notValidRating.relocate(500, 360);
         notValidRating.setFill(Color.RED);
-        
-        
-//        Text ratingAverage = new Text("No ratings yet");
-//        ratingAverage.relocate(325, 500);
-//        ratingAverage.setVisible(false);
-        
-//        Label correctInteger = new Label("Please enter an integer between 1 and 5, inclusive");
-        
+                
         Button viewRatings = new Button("VIEW RATINGS");
         viewRatings.relocate(313, 430);
         
@@ -1208,22 +1124,14 @@ public class GUIDriver extends Application {
         feedbackScreen.getChildren().add(viewRatings);
         feedbackScreen.getChildren().addAll(notValidRating, notValidReview);
         
-//        feedbackScreen.getChildren().add(ratingAverage);
-        
-//        rc.addReviews("test test test!");
-        
         addRev.setOnAction(e-> {
         	String tempReview = review.getText();
-        	System.out.println("THE STRING IS CURRENTLY: " + tempReview);
-        	
-//        	notValidReview.setVisible(false);
-        	
+        	        	
         	try {
         		if (tempReview.length() > 0 && tempReview.length() <= 45) {
         			rc.addReviews(tempReview);
         		}
         		else {
-        			System.out.println("REVIEW MUST HAVE TEXT");
         			notValidReview.setVisible(true);
         			Timeline hideMessage = new Timeline(new KeyFrame(Duration.seconds(4), g-> {
         				notValidReview.setVisible(false);
@@ -1245,7 +1153,6 @@ public class GUIDriver extends Application {
         			rc.addRatings(tempRating);
         		}
         		else {
-        			System.out.println("NUMBER NOT IN RANGE.");
         			notValidRating.setVisible(true);
         			Timeline hideMessage = new Timeline(new KeyFrame(Duration.seconds(4), g-> {
         				notValidRating.setVisible(false);
@@ -1305,16 +1212,13 @@ public class GUIDriver extends Application {
         // In the feedbackScreen Pane
         viewRatings.setOnAction(e-> {
         	String labelMessage = rc.getRatings() + " / 5";
-        	System.out.println("*********" + labelMessage + "********");
         	latestRatings.setText(labelMessage);
         	latestRatings.setVisible(true);
         	
         	labelMessage = "" + rc.getLatestReviews();
         	latestReviews.setText(labelMessage);
         	latestReviews.setVisible(true);
-        	
-        	System.out.println("*********" + labelMessage + "********");
-        	
+        	        	
         	stage.setScene(viewRRScene);
         });
         
@@ -1335,9 +1239,7 @@ public class GUIDriver extends Application {
 
 
         root.getChildren().add(grid); // adds rectangle behind grid
-        
-//        root.getChildren().add(ratingAverage);
-        
+                
         root.getChildren().add(token);
         root.getChildren().add(confirm);
         root.getChildren().add(nextPlayer);
@@ -1346,9 +1248,7 @@ public class GUIDriver extends Application {
         root.getChildren().addAll(grey, green, blue, purple, orange, pink);
         
         settingsRoot.getChildren().addAll(tokenRed, tokenYellow, tokenOrange, tokenSalmon, tokenPink, tokenCyan);
-        
-//        root.getChildren().add(startGame);
-        
+                
         root.getChildren().add(winningLabel);
         
         root.getChildren().add(addReview);
@@ -1366,7 +1266,6 @@ public class GUIDriver extends Application {
         	
 		});
         
-//        stage.setScene(scene);
         stage.show();
 		
 	}
