@@ -506,6 +506,10 @@ public class GUIDriver extends Application {
 
 				// "Next" button disappears
 				next.setVisible(false);
+				
+				// Prevents players from editing their user names after "Next" button has been pressed
+				p1Name.setEditable(false);
+				p2Name.setEditable(false);
 
 				// Indicates players to choose their color
 				chooseColour.setText(username1 + ", please choose your token colour:");
@@ -816,7 +820,7 @@ public class GUIDriver extends Application {
 			confirm.setDisable(true); // Prevents players from pressing CONFIRM again before the token has reached the
 										// bottom
 			if (!playerWinStopTokens) {
-				int column = playingGrid.getColumnNum(token.getCenterX()); // gets the column the token is to be placed
+				int column = playingGrid.getColumn(token.getCenterX()); // gets the column the token is to be placed
 																			// in based on the tokens location
 
 				if (column != -1) { // the token is not outside the grid

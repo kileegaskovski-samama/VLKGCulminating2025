@@ -12,8 +12,8 @@ public class Grid {
 
 	// hold temporary values to determine as the game is being played whether a
 	// player has four-in-a-row
-	ArrayList<Integer> rowValues = new ArrayList<>();
-	ArrayList<Integer> colValues = new ArrayList<>();
+	public ArrayList<Integer> rowValues = new ArrayList<>();
+	public ArrayList<Integer> colValues = new ArrayList<>();
 
 	/**
 	 * Creates a six by seven grid
@@ -83,7 +83,7 @@ public class Grid {
 	 * @return returns the column number based on the x-coordinate of the token's
 	 *         position
 	 */
-	public int getColumnNum(double currentX) {
+	public int getColumn(double currentX) {
 		if (currentX == 111) {
 			return 0;
 		} else if (currentX == 191.0) {
