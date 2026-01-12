@@ -6,126 +6,126 @@ import java.util.Scanner;
  * Collection of ratings and reviews for the connect 4 game
  */
 public class RatingCollection {
-	private File ratingFile;
-	private File reviewFile;
-	
+	private File ratingFile; // contains all the number ratings
+	private File reviewFile; // contains all the written reviews
+
 	/**
 	 * Creates a ratingCollection containing written reviews and game ratings
 	 */
 	public RatingCollection() {
 		ratingFile = new File("Ratings.txt");
 		reviewFile = new File("Reviews.txt");
-		
 	}
-	
+
 	/**
 	 * Adds a review to the file "Reviews.txt"
+	 * 
 	 * @param review - a written review from 1 to 45 characters, inclusive
 	 */
 	public void addReviews(String review) {
 		try {
 			FileWriter out = new FileWriter(reviewFile, true);
-			out.write(review + "\n");
+			out.write(review + "\n"); // adds the review to reviewFile
 			out.flush();
 			out.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Adds a rating to the file "Ratings.txt"
-	 * @param rating - a number rating from 1 to 5, inclusive
-	 * Precondition: rating must be an integer
+	 * 
+	 * @param rating - a number rating from 1 to 5, inclusive Precondition: rating
+	 *               must be an integer
 	 */
 	public void addRatings(int rating) {
 		try {
 			FileWriter out = new FileWriter(ratingFile, true);
-			out.write(rating + "\n");
+			out.write(rating + "\n"); // adds the rating to ratingFile
 			out.flush();
 			out.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Returns the average rating for Connect 4
+	 * 
 	 * @return average game rating
 	 */
 	public double getRatings() {
 		double average = 0;
-		int num = 0;
-		
+		int num = 0; // counts the total number of ratings
+
 		try {
 			Scanner inFile = new Scanner(ratingFile);
-			
+
 			while (inFile.hasNextLine()) {
 				average += Integer.parseInt(inFile.nextLine());
 				num++;
 			}
-			average /= num;
-			
+			average /= num; // gets the average rating
+
 			inFile.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
-		average = Math.round(average*100.0) / 100.0;
-		
+
+		average = Math.round(average * 100.0) / 100.0; // rounds the average rating to 2 decimal places
+
 		return average;
 	}
-	
+
 	/**
 	 * Returns the last four reviews for Connect 4
+	 * 
 	 * @return returns the last four game reviews
 	 */
 	public String getLatestReviews() {
 		String latestReviews = "";
 		int count = 0;
 		int secondCount = 0;
-		
+
 		try {
 			Scanner inFile = new Scanner(reviewFile);
-			
+
+			// counts the number of lines in reviewFile
 			while (inFile.hasNextLine()) {
 				count++;
 				inFile.nextLine();
 			}
-			
+
 			inFile.close();
-			
-		}
-		catch (Exception e) {
+
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		try {
 			Scanner inFile = new Scanner(reviewFile);
-			
+
+			// adds the last four reviews to latestReviews, each separated by "\n"
 			while (inFile.hasNextLine()) {
 				secondCount++;
-				if (secondCount == count - 3 || secondCount == count - 2 || secondCount == count - 1 || secondCount == count) {
+				if (secondCount == count - 3 || secondCount == count - 2 || secondCount == count - 1
+						|| secondCount == count) {
 					latestReviews += "•  " + inFile.nextLine() + "\n";
-				}
-				else {
+				} else {
 					inFile.nextLine();
 				}
 			}
-			
+			// Indicates if there are no reviews
 			if (latestReviews.length() == 0) {
 				latestReviews = "No reviews";
 			}
-			
+
 			inFile.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return latestReviews;
 	}
 }
